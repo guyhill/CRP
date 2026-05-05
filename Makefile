@@ -9,15 +9,15 @@
 
 ####### Compiler, tools and options
 # Environment
-CC               = $(GNUDIR)/gcc
-CXX              = $(GNUDIR)/g++
-WINDRES          = $(GNUDIR)/windres
+CC               = gcc
+CXX              = g++
+WINDRES          = x86_64-w64-mingw32-windres
 MKDIR            = mkdir
 RM               = rm -f
 CP               = cp -p
 DEFINES		 = -DDYNAMIC
 
-32BIT            = true
+32BIT            = false
 #32BIT           = false
 
 ifeq ($(32BIT), false) # 64 bit assumed
@@ -35,7 +35,7 @@ else
 endif
 
 # Macros
-CND_DLIB_EXT     = dll
+CND_DLIB_EXT     = so
 CND_CONF         = Debug
 CND_DISTDIR      = dist
 CND_BUILDDIR     = build
@@ -44,7 +44,7 @@ CND_BUILDDIR     = build
 STAMP            =#-DSTAMP
 
 # Solvers
-SOLVER = CP,XP,SC# default is all three
+SOLVER = SC# default is all three
 comma:=,
 null:=
 space:= $(null) #
@@ -78,11 +78,11 @@ XPRLIBS          = -L$(DIRXPRESS) -lxprl -lxprs
 
 DIRLPS           = ../Solvers/scip-3.1.1
 DIRSOPLEX        = ../Solvers/soplex-2.0.1
-SOPLEXLIB        = soplex-2.0.1.mingw.$(ARCH).gnu.opt
-NLPILIB          = nlpi.cppad-3.1.1.mingw.$(ARCH).gnu.opt
-SCIPLIB          = scip-3.1.1.mingw.$(ARCH).gnu.opt
-OBJSCIPLIB       = objscip-3.1.1.mingw.$(ARCH).gnu.opt
-LPISPXLIB        = lpispx-3.1.1.mingw.$(ARCH).gnu.opt
+SOPLEXLIB        = soplex-2.0.1.linux.$(ARCH).gnu.opt
+NLPILIB          = nlpi.cppad-3.1.1.linux.$(ARCH).gnu.opt
+SCIPLIB          = scip-3.1.1.linux.$(ARCH).gnu.opt
+OBJSCIPLIB       = objscip-3.1.1.linux.$(ARCH).gnu.opt
+LPISPXLIB        = lpispx-3.1.1.linux.$(ARCH).gnu.opt
 SCIPINC          = -I$(DIRLPS)/src -I$(DIRSOPLEX)/src
 SCIPLIBS         = -L$(DIRLPS)/lib -L$(DIRSOPLEX)/lib -L$(DIRLPS)/lib -l$(OBJSCIPLIB) -l$(SCIPLIB) -l$(NLPILIB) -l$(LPISPXLIB) -l$(SOPLEXLIB)
 
@@ -104,10 +104,10 @@ ifneq (,$(findstring SC,$(USEDSOLVERS)))
 endif
 
 ####### Object Files
-OBJECTS          = $(OBJECTDIR)/src/crpXmain.o $(OBJECTDIR)/src/crpXaudit.o $(OBJECTDIR)/src/crpSmain.o $(OBJECTDIR)/src/crpSaudit.o $(OBJECTDIR)/src/crpCmain.o $(OBJECTDIR)/src/crpCaudit.o $(OBJECTDIR)/src/WrapCRP.o $(OBJECTDIR)/src/Versioninfo.o
+OBJECTS          = $(OBJECTDIR)/src/crpXmain.o $(OBJECTDIR)/src/crpXaudit.o $(OBJECTDIR)/src/crpSmain.o $(OBJECTDIR)/src/crpSaudit.o $(OBJECTDIR)/src/crpCmain.o $(OBJECTDIR)/src/crpCaudit.o $(OBJECTDIR)/src/WrapCRP.o 
 
 
-CXXFLAGS         = -g -O2 -Wall $(DEFINES) $(BITS)
+CXXFLAGS         = -g -O2 -Wall $(DEFINES) $(BITS) -fPIC -fcommon
 #CXXFLAGS         = -ggdb -g -Og -Wall $(DEFINES) $(BITS)
 LDLIBSOPTIONS    = $(LIBS) -static-libgcc -static-libstdc++
 
@@ -115,7 +115,7 @@ LDLIBSOPTIONS    = $(LIBS) -static-libgcc -static-libstdc++
 all:
 	$(MKDIR) -p $(OBJECTDIR)/src
 	$(MKDIR) -p $(CND_DISTDIR)/$(CND_CONF)/$(CND_PLATFORM)
-	$(WINDRES) ./src/Versioninfo.rc $(CND_BUILDDIR)/$(CND_CONF)/$(CND_PLATFORM)/src/Versioninfo.o
+	#$(WINDRES) ./src/Versioninfo.rc $(CND_BUILDDIR)/$(CND_CONF)/$(CND_PLATFORM)/src/Versioninfo.o
 
 	$(CC) -c $(CXXFLAGS) $(INCPATH) -o $(OBJECTDIR)/src/crpCaudit.o src/crpCaudit.c
 	$(CC) -c $(CXXFLAGS) $(INCPATH) -o $(OBJECTDIR)/src/crpCmain.o src/crpCmain.c
