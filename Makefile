@@ -109,7 +109,7 @@ OBJECTS          = $(OBJECTDIR)/src/crpXmain.o $(OBJECTDIR)/src/crpXaudit.o $(OB
 
 CXXFLAGS         = -g -O2 -Wall $(DEFINES) $(BITS) -fPIC -fcommon
 #CXXFLAGS         = -ggdb -g -Og -Wall $(DEFINES) $(BITS)
-LDLIBSOPTIONS    = $(LIBS) -static-libgcc -static-libstdc++
+LDLIBSOPTIONS    = $(LIBS) -static-libgcc -static-libstdc++ -Bsymbolic
 
 ####### Compile
 all:
